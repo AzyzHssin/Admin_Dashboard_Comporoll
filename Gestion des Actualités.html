@@ -27,7 +27,10 @@
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
   <!-- styling of cards -->
   <link rel="stylesheet" href="./cardsStye.css">
+   <!-- Toastr -->
+   <link rel="stylesheet" href="./plugins/toastr/toastr.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="./plugins/toastr/toastr.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -41,11 +44,11 @@
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
-      <li class="nav-item">
+     <!--  <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
+      </li> -->
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Accueil</a>
+        <a href="Gestion des Actualités.html" class="nav-link">Accueil / Gestion des actualités</a>
       </li>
    
     </ul>
@@ -208,7 +211,7 @@
                     <div class="card-body">
                       <div class="form-group">
                         <label for="Titre d'actualité">Titre d'actualité</label>
-                        <input type="email" class="form-control" id="title" placeholder="Titre d'actualité">
+                        <input type="text" class="form-control" id="title" placeholder="Titre d'actualité">
                       </div>
                       <div class="form-group">
                         <label for="Brief d'aactualité">Brief d'aactualité</label>
@@ -246,17 +249,73 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-    <!-- /.content -->
-   
 
+
+
+      <!-- modal update -->
+    <div>
+
+   
+      <div class="modal fade" id="modal-secondary">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content bg-secondary">
+            <div class="modal-header">
+              <h4 class="modal-title">Modifier votre actualité</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="Titre d'actualité">Modifier le titre d'actualité</label>
+
+                        <input type="text" class="form-control" id="titleUpdate" >
+                      </div>
+                      <div class="form-group">
+                        <label for="Brief d'aactualité">Modifier le brief d'actualité</label>
+                        <input type="text" class="form-control" id="briefUpdate" >
+                      </div>
+                      <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" rows="3" id="descriptionUpdate" ></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="Image">Modifer l'image</label>
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="imageUpdate">
+                            <label class="custom-file-label" for="exampleInputFile">Choisir une image</label>
+                          </div>
+                          <div class="input-group-append">
+                            <span class="input-group-text">Upload</span>
+                          </div>
+                        </div>
+                      </div>
+                     
+                    </div>
+                    <!-- /.card-body -->
+                    
+                
+                  </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">fermer</button>
+              <button type="button" class="btn btn-primary"  onClick="UpdateRequest()">Enregistrer les modifications</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+    <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <strong>Copyright &copy; 2023 Comoroll</strong>
     Tous les droits sont réservés
-
   </footer>
-
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -454,7 +513,7 @@
       });
     });
   </script>
-<script>
+<script >
     function CreateModal() {
 
   var titleElement = document.getElementById("title");
@@ -485,75 +544,170 @@ var objectToSend = {
 
   $.ajax({
           type: "POST",
-          url: "http://localhost:5000/api/actualite",
+          url: "http://localhost:5000/api/actualite/",
           data: objectToSend,
           success: function(response) {
             console.log(response);
+           
+        toastr.success("L''actualité est enregistré avec success.")
+        setTimeout(() => {
+    refreshPage()
+  }, 2000);
           },
           error: function(xhr, status, error) {
             console.error(xhr.responseText);
+            toastr.error("La requête n'a pas pu être envoyée")
           }
         });
   };
 
   // Read the file as a data URL (base64)
   reader.readAsDataURL(file);
+  
 }
-
-
-
-
-
 
 </script>
 <script>
-fetch('http://localhost:5000/api/actualite/fetchAll')
-  .then(response => response.json())
-  .then(cards => {
-    // Generate HTML for the list of cards
- 
-   html=""
-    cards.forEach(function(card) {
-      console.log(card.image.replace("dataimage/pngbase64","data:image/png;base64,"))
-      
-      html += ` <div class="col-md-12 col-lg-6 col-xl-4 mb-3"  >
-          <div class="position-relative">
-      
-            <img class="card-img-top" src="data:image/png;base64,${card.image}" alt="Dist Photo 2">
-      
-            <div class="overlay"></div>
-            <div class="card-img-overlay d-flex flex-column justify-content-center">
-              <div class="dropdown mb-4">
-                  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <button class="dropdown-item" type="button">supprimer</button>
-                    <button class="dropdown-item" type="button">modifier</button>
-                  </div>
-                </div>
-              <h5 class="card-title text-white mt-5 pt-2">${card.title}</h5>
-              <p class="card-text pb-2 pt-1 text-white">
-               ${card.brief}
-              </p>
-              <a href="#" class="text-white">${card.creationDate}</a>
-            </div>
-          </div>
-        </div>`
-     
-    });
+function UpdateRequest(){
+
+  var titleElement = document.getElementById("titleUpdate");
+  var titleValue = titleElement.value;
+
+  var briefElement = document.getElementById("briefUpdate");
+  var briefValue = briefElement.value;
+
+  var descriptionElement = document.getElementById("descriptionUpdate");
+  var descriptionValue = descriptionElement.value;
+
+  var fileInput  = document.getElementById("imageUpdate");
+  var file = fileInput.files[0];
+  var reader = new FileReader();
+  reader.onload = function (event) {
+    // Access the base64 result
+    var base64String = event.target.result;
     
 
-    // Render the list of cards inside the cardContainer div
-    document.getElementById('row').innerHTML = html;
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
 
+    //preparing the object for the backend
+var objectToBeUpdated = {
+    title:titleValue ,
+    description:descriptionValue ,
+    image:base64String,
+    brief:briefValue
+ 
+  };
+  console.log("object To Be Updated  :",objectToBeUpdated)
+  var idCard=localStorage.getItem(`idactualiteUpdate`)
+  $.ajax({
+  url: `http://localhost:5000/api/actualite/${idCard}`,
+  type: 'PUT',
+  contentType: 'application/json',
+  data: JSON.stringify(objectToBeUpdated),
+  success: function(response) {
+    // Handle the response data
+    console.log(response);
+    toastr.success("L'actualité est enregistrée avec succès.");
+    setTimeout(() => {
+      refreshPage();
+    }, 2000);
+  },
+  error: function(xhr, status, error) {
+    // Handle any errors
+    console.error(xhr.responseText);
+    toastr.error("La requête n'a pas pu être envoyée.");
+  }
+});
+}
+  
 
+// Read the file as a data URL (base64)
+reader.readAsDataURL(file);
+}
 
+function refreshPage() {
+      location.reload(); // Refresh the page
+    }
+function DeleteCard(props){
+var url=`http://localhost:5000/api/actualite/${props}`;
+var xhr = new XMLHttpRequest();
+  xhr.open("DELETE", url, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      // Delete request successful, perform any additional actions here
+      console.log("Card deleted successfully.");
+      toastr.success("L''actualité est supprimé");
+      setTimeout(() => {
+    refreshPage()
+  }, 2000);
+    }
+
+  };
+  xhr.send();
+
+}
+function passPropsToModal(props){
+  console.log("i m in passing props with this data as params",props)
+  /* localStorage.setItem('titleUpdate', props.title);
+  var titleUpdateValue=localStorage.getItem('titleUpdate')
+  document.getElementById('titleUpdate').value = titleUpdateValue;
+  console.log(props.title)
+  
+  localStorage.setItem('briefUpdate', props.brief);
+  var briefUpdateValue=localStorage.getItem('briefUpdate')
+  document.getElementById('briefUpdate').value=briefUpdateValue
+  console.log(props.brief)
+
+  localStorage.setItem('descriptionUpdate', props.description);
+  var descriptionUpdateValue=localStorage.getItem('descriptionUpdate')
+  document.getElementById('descriptionUpdate').value=descriptionUpdateValue
+  console.log(props.description)
+
+  localStorage.setItem('imageUpdate', props.image);
+  var imageUpdateValue=localStorage.getItem('imageUpdate')
+  document.getElementById('imageUpdate').value=imageUpdateValue
+  console.log(props.image) */
 
  
+  localStorage.setItem('idactualiteUpdate', props);
+  var idactualiteUpdateValue=localStorage.getItem('idactualiteUpdate')
+  console.log(idactualiteUpdateValue)
+
+}
+
+fetch('http://localhost:5000/api/actualite/fetchAll')
+    .then(response => response.json())
+    .then(cards => {
+      let html = "";
+      cards.forEach(function(card) {
+        console.log("this is one card", card)
+        html += `
+          <div class="col-md-12 col-lg-6 col-xl-4 mb-3" id="card-${card.idactualite}">
+            <div class="position-relative" id="container">
+              <img class="img-fluid" src="${card.image}" alt="Photo d'actualité">
+              <div class="overlay"></div>
+              <div class="card-img-overlay d-flex flex-column justify-content-center">
+                <div class="dropdown mb-2">
+                  <button class="btn btn-primary dropdown-toggle" id="dropdownbtn" type="button" data-toggle="dropdown" aria-expanded="false" onClick="passPropsToModal('${card.idactualite}')"></button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button" onClick="DeleteCard('${card.idactualite}')">Supprimer l'actualité</button>
+                    <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modal-secondary" >Modifier</button>
+                  </div>
+                </div>
+                <h5 class="card-title text-white mt-5 pt-2">${card.title}</h5>
+                <p class="card-text pb-2 pt-1 text-white">
+                  ${card.brief}
+                </p>
+                <a href="#" class="text-white">${card.creationDate}</a>
+              </div>
+            </div>
+          </div>`;
+      });
+
+      document.getElementById('row').innerHTML = html;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 </script>
 
 </body>

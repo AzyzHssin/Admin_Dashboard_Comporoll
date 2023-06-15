@@ -14,5 +14,16 @@
   .dropdown{
       margin-left: auto;
       
+      
   }
-  
+  #container{
+    height: 250px; /* Set the desired height */
+  width: 400px; /* Set the desired width */
+  overflow: hidden;
+  }
+  #dropdownbtn{
+    background-size: cover;
+    background-position: center;
+    margin-top: -45px;
+    margin-left: 250px;
+  }
