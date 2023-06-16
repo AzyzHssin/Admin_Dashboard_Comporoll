@@ -526,8 +526,13 @@
 
   var descriptionElement = document.getElementById("description");
   var descriptionValue = descriptionElement.value;
+  
+  var videoElement = document.getElementById("video")
+  var videoValue = videoElement.value;
+  var base64String=""
 
-  var fileInput  = document.getElementById("image");
+  if(videoValue.length==0){
+    var fileInput  = document.getElementById("image");
   var file = fileInput.files[0];
   var reader = new FileReader();
   reader.onload = function (event) {
@@ -536,14 +541,19 @@
     console.log(base64String)
     // Display the base64 string
     //SENDING REQUEST
-var objectToSend = {
+  }
+  reader.readAsDataURL(file);
+  }
+ 
+  var objectToSend = {
     title:titleValue ,
     description:descriptionValue ,
     image:base64String,
-    brief:briefValue
+    brief:briefValue,
+    video:videoValue
   };
+  
   console.log("object to send :",objectToSend)
-
   $.ajax({
           type: "POST",
           url: "http://localhost:5000/api/actualite/",
@@ -561,10 +571,10 @@ var objectToSend = {
             toastr.error("La requête n'a pas pu être envoyée")
           }
         });
-  };
+  
 
   // Read the file as a data URL (base64)
-  reader.readAsDataURL(file);
+ 
   
 }
 
@@ -581,23 +591,34 @@ function UpdateRequest(){
   var descriptionElement = document.getElementById("descriptionUpdate");
   var descriptionValue = descriptionElement.value;
 
-  var fileInput  = document.getElementById("imageUpdate");
-  var file = fileInput.files[0];
-  var reader = new FileReader();
+  var videoElement = document.getElementById("videoUpdate")
+  var videoValue = videoElement.value;
+
+  var base64String=""
+  if(videoValue.length==0){
+    var fileInput  = document.getElementById("imageUpdate");
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+
+  
   reader.onload = function (event) {
     // Access the base64 result
     var base64String = event.target.result;
     
-
-
-    //preparing the object for the backend
-var objectToBeUpdated = {
+  }
+  reader.readAsDataURL(file);
+}
+  var objectToBeUpdated = {
     title:titleValue ,
     description:descriptionValue ,
     image:base64String,
-    brief:briefValue
+    brief:briefValue,
+    video:videoValue
  
   };
+
+    //preparing the object for the backend
+
   console.log("object To Be Updated  :",objectToBeUpdated)
   var idCard=localStorage.getItem(`idactualiteUpdate`)
   $.ajax({
@@ -619,11 +640,10 @@ var objectToBeUpdated = {
     toastr.error("La requête n'a pas pu être envoyée.");
   }
 });
-}
+
   
 
 // Read the file as a data URL (base64)
-reader.readAsDataURL(file);
 }
 
 function refreshPage() {
@@ -763,10 +783,7 @@ dropdowntwo.addEventListener("click", function() {
 
   // Render the selected option's HTML script
   if (selectedOptiontwo === "option3") {
-    
-
     resultContainertwo.innerHTML=`  <div class="input-group">
-
 <div class="custom-file">
   <input type="file" class="custom-file-input" id="image">
   <label class="custom-file-label" for="exampleInputFile">Choisir une imageUpdate</label>
