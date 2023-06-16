@@ -211,28 +211,29 @@
                     <div class="card-body">
                       <div class="form-group">
                         <label for="Titre d'actualité">Titre d'actualité</label>
-                        <input type="text" class="form-control" id="title" placeholder="Titre d'actualité">
+                        <input type="text" class="form-control" id="title" placeholder="Titre d'actualité"maxlength="80" oninput="checkInputLength(this)">
                       </div>
                       <div class="form-group">
                         <label for="Brief d'aactualité">Brief d'aactualité</label>
-                        <input type="text" class="form-control" id="brief" placeholder="Brief d'aactualité">
+                        <input type="text" class="form-control" id="brief" placeholder="Brief d'aactualité" maxlength="100" oninput="checkInputLength(this)">
                       </div>
                       <div class="form-group">
                         <label>Description</label>
                         <textarea class="form-control" rows="3" id="description" placeholder="Description ..."></textarea>
                       </div>
+                      
                       <div class="form-group">
-                        <label for="Image">Image</label>
-                        <div class="input-group">
-                          <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="image">
-                            <label class="custom-file-label" for="exampleInputFile">Choisir une image</label>
-                          </div>
-                          <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
-                          </div>
-                        </div>
+                      <div id="Optionselection1">
+                        <label for="Image">Choisir une image ou un lien video</label>
+                        <select id="dropdown1"  class="input-group-append">
+                          <option value="option1" class="custom-file-input">Image</option>
+                          <option value="option2" class="custom-file-input">Lien video </option>
+                        </select>
                       </div>
+                      <br>
+                        <div id="res1">
+
+                        </div>
                      
                     </div>
                     <!-- /.card-body -->
@@ -271,11 +272,11 @@
                       <div class="form-group">
                         <label for="Titre d'actualité">Modifier le titre d'actualité</label>
 
-                        <input type="text" class="form-control" id="titleUpdate" >
+                        <input type="text" class="form-control" id="titleUpdate"maxlength="80" oninput="checkInputLength(this)" >
                       </div>
                       <div class="form-group">
                         <label for="Brief d'aactualité">Modifier le brief d'actualité</label>
-                        <input type="text" class="form-control" id="briefUpdate" >
+                        <input type="text" class="form-control" id="briefUpdate" maxlength="100" oninput="checkInputLength(this)" >
                       </div>
                       <div class="form-group">
                         <label>Description</label>
@@ -686,14 +687,15 @@ fetch('http://localhost:5000/api/actualite/fetchAll')
               <img class="img-fluid object-fit:cover" src="${card.image}" alt="Photo d'actualité">
               <div class="overlay"></div>
               <div class="card-img-overlay d-flex flex-column justify-content-center">
-                <div class="dropdown mb-2">
+                <div class="dropdown">
                   <button class="btn btn-primary dropdown-toggle" id="dropdownbtn" type="button" data-toggle="dropdown" aria-expanded="false" onClick="passPropsToModal('${card.idactualite}')"></button>
                   <div class="dropdown-menu dropdown-menu-right">
                     <button class="dropdown-item" type="button" onClick="DeleteCard('${card.idactualite}')">Supprimer l'actualité</button>
                     <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modal-secondary" >Modifier</button>
                   </div>
                 </div>
-                <h5 class="card-title text-white mt-5 pt-2">${card.title}</h5>
+                <></>
+                <h5 class="card-title text-white">${card.title}</h5>
                 <p class="card-text pb-2 pt-1 text-white">
                   ${card.brief}
                 </p>
@@ -708,6 +710,52 @@ fetch('http://localhost:5000/api/actualite/fetchAll')
     .catch(error => {
       console.error('Error:', error);
     });
+
+   // Get the dropdown element
+   var dropdown = document.getElementById("dropdown1");
+
+// Get the result container element
+var resultContainer = document.getElementById("res1");
+
+// Add event listener for change event
+dropdown.addEventListener("click", function() {
+  var selectedOption = dropdown.value;
+
+  // Clear previous result
+  resultContainer.innerHTML = "";
+
+  // Render the selected option's HTML script
+  if (selectedOption === "option1") {
+    
+
+    resultContainer.innerHTML=`  <div class="input-group">
+
+<div class="custom-file">
+  <input type="file" class="custom-file-input" id="image">
+  <label class="custom-file-label" for="exampleInputFile">Choisir une image</label>
+</div>
+<div class="input-group-append">
+  <span class="input-group-text">Upload</span>
+</div>
+</div>
+</div>
+    `
+  } else if (selectedOption === "option2") {
+    resultContainer.innerHTML=` <label for="Titre d'actualité">Lien video</label>
+                        <input type="text" class="form-control" id="video" placeholder="Entrz le lien ici">
+    `
+  }
+});
+  
+
+function checkInputLength(input) {
+  if (input.value.length > input.maxLength) {
+    input.classList.add('input-error');
+    input.value = input.value.substring(0, input.maxLength); // Truncate the input value
+  } else {
+    input.classList.remove('input-error');
+  }
+}
 </script>
 
 </body>
