@@ -683,7 +683,7 @@ fetch('http://localhost:5000/api/actualite/fetchAll')
         html += `
           <div class="col-md-12 col-lg-6 col-xl-4 mb-3" id="card-${card.idactualite}">
             <div class="position-relative" id="container">
-              <img class="img-fluid" src="${card.image}" alt="Photo d'actualité">
+              <img class="img-fluid object-fit:cover" src="${card.image}" alt="Photo d'actualité">
               <div class="overlay"></div>
               <div class="card-img-overlay d-flex flex-column justify-content-center">
                 <div class="dropdown mb-2">

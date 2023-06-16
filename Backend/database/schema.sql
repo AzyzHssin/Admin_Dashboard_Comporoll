@@ -15,7 +15,7 @@ USE `comporoll` ;
 CREATE TABLE IF NOT EXISTS `comporoll`.`actualite` (
   `idactualite` INT NOT NULL AUTO_INCREMENT,
   `description` VARCHAR(600) NOT NULL,
-  `image` TEXT NULL,
+  `image` LONGTEXT NULL,
   `brief` VARCHAR(500) NOT NULL,
   `creationDate` DATETIME NOT NULL,
   `title` VARCHAR(200) NOT NULL,
