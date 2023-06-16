@@ -232,8 +232,8 @@
                       </div>
                       <br>
                         <div id="res1">
-
                         </div>
+                      </div>
                      
                     </div>
                     <!-- /.card-body -->
@@ -282,18 +282,19 @@
                         <label>Description</label>
                         <textarea class="form-control" rows="3" id="descriptionUpdate" ></textarea>
                       </div>
+                      <!-- rendering options -->
                       <div class="form-group">
-                        <label for="Image">Modifer l'image</label>
-                        <div class="input-group">
-                          <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="imageUpdate">
-                            <label class="custom-file-label" for="exampleInputFile">Choisir une image</label>
-                          </div>
-                          <div class="input-group-append">
-                            <span class="input-group-text">Upload</span>
+                        <div id="Optionselection1">
+                          <label for="Image">Choisir une image ou un lien video</label>
+                          <select id="dropdown2"  class="input-group-append">
+                            <option value="option3" class="custom-file-input">Image</option>
+                            <option value="option4" class="custom-file-input">Lien video </option>
+                          </select>
+                        </div>
+                        <br>
+                          <div id="res2">
                           </div>
                         </div>
-                      </div>
                      
                     </div>
                     <!-- /.card-body -->
@@ -738,7 +739,7 @@ dropdown.addEventListener("click", function() {
   <span class="input-group-text">Upload</span>
 </div>
 </div>
-</div>
+
     `
   } else if (selectedOption === "option2") {
     resultContainer.innerHTML=` <label for="Titre d'actualité">Lien video</label>
@@ -747,7 +748,41 @@ dropdown.addEventListener("click", function() {
   }
 });
   
+/* ___________________________________________________________________________ */
+var dropdowntwo = document.getElementById("dropdown2");
 
+// Get the result container element
+var resultContainertwo = document.getElementById("res2");
+
+// Add event listener for change event
+dropdowntwo.addEventListener("click", function() {
+  var selectedOptiontwo = dropdowntwo.value;
+
+  // Clear previous result
+  resultContainertwo.innerHTML = "";
+
+  // Render the selected option's HTML script
+  if (selectedOptiontwo === "option3") {
+    
+
+    resultContainertwo.innerHTML=`  <div class="input-group">
+
+<div class="custom-file">
+  <input type="file" class="custom-file-input" id="image">
+  <label class="custom-file-label" for="exampleInputFile">Choisir une imageUpdate</label>
+</div>
+<div class="input-group-append">
+  <span class="input-group-text">Upload</span>
+</div>
+</div>
+
+    `
+  }else if (selectedOptiontwo === "option4") {
+    resultContainertwo.innerHTML=` <label for="Titre d'actualité">Lien video</label>
+                        <input type="text" class="form-control" id="videoUpdate" placeholder="Entrz le lien ici">
+    `
+  }
+});
 function checkInputLength(input) {
   if (input.value.length > input.maxLength) {
     input.classList.add('input-error');
