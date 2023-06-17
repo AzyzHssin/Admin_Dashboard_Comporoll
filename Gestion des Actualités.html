@@ -526,35 +526,36 @@
 
   var descriptionElement = document.getElementById("description");
   var descriptionValue = descriptionElement.value;
-  
-  var videoElement = document.getElementById("video")
-  var videoValue = videoElement.value;
+  var videoValue=""
   var base64String=""
+  var selectedOption=document.getElementById("dropdown1").value;
+  if (selectedOption === "option1") {
+    var fileInput = document.getElementById("image");
+    var file = fileInput.files[0];
 
-  if(videoValue.length==0){
-    var fileInput  = document.getElementById("image");
-  var file = fileInput.files[0];
-  var reader = new FileReader();
-  reader.onload = function (event) {
-    // Access the base64 result
-    var base64String = event.target.result;
-    console.log(base64String)
-    // Display the base64 string
-    //SENDING REQUEST
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      base64String = event.target.result;
+      console.log("base64", base64String);
+      continueExecution();
+    };
+    reader.readAsDataURL(file);
+  } else {
+    var videoElement = document.getElementById("video");
+    videoValue = videoElement.value;
+    continueExecution();
   }
-  reader.readAsDataURL(file);
-  }
- 
-  var objectToSend = {
-    title:titleValue ,
-    description:descriptionValue ,
-    image:base64String,
-    brief:briefValue,
-    video:videoValue
-  };
   
-  console.log("object to send :",objectToSend)
-  $.ajax({
+  function continueExecution() {
+    var objectToSend = {
+      title: titleValue,
+      description: descriptionValue,
+      image: base64String,
+      brief: briefValue,
+      video: videoValue,
+    };
+
+    $.ajax({
           type: "POST",
           url: "http://localhost:5000/api/actualite/",
           data: objectToSend,
@@ -564,6 +565,7 @@
         toastr.success("L''actualité est enregistré avec success.")
         setTimeout(() => {
     refreshPage()
+    console.log("refreshing")
   }, 2000);
           },
           error: function(xhr, status, error) {
@@ -571,7 +573,10 @@
             toastr.error("La requête n'a pas pu être envoyée")
           }
         });
+
+    console.log("object to send:", objectToSend);
   
+  }
 
   // Read the file as a data URL (base64)
  
@@ -607,6 +612,9 @@ function UpdateRequest(){
     
   }
   reader.readAsDataURL(file);
+}
+if(videoValue.length==0){
+  vidoeValue=""
 }
   var objectToBeUpdated = {
     title:titleValue ,
@@ -715,7 +723,7 @@ fetch('http://localhost:5000/api/actualite/fetchAll')
                     <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modal-secondary" >Modifier</button>
                   </div>
                 </div>
-                <></>
+                
                 <h5 class="card-title text-white">${card.title}</h5>
                 <p class="card-text pb-2 pt-1 text-white">
                   ${card.brief}
@@ -763,7 +771,7 @@ dropdown.addEventListener("click", function() {
     `
   } else if (selectedOption === "option2") {
     resultContainer.innerHTML=` <label for="Titre d'actualité">Lien video</label>
-                        <input type="text" class="form-control" id="video" placeholder="Entrz le lien ici">
+                        <input type="text" class="form-control" id="video" value="" placeholder="Entrz le lien ici">
     `
   }
 });
@@ -796,7 +804,7 @@ dropdowntwo.addEventListener("click", function() {
     `
   }else if (selectedOptiontwo === "option4") {
     resultContainertwo.innerHTML=` <label for="Titre d'actualité">Lien video</label>
-                        <input type="text" class="form-control" id="videoUpdate" placeholder="Entrz le lien ici">
+                        <input type="text" class="form-control" id="videoUpdate" value="" placeholder="Entrz le lien ici">
     `
   }
 });

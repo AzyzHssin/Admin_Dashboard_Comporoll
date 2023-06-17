@@ -11,9 +11,9 @@ createNews: (req,res)=>{
     //taking the current date
     const currentDate = moment().format('YYYY-MM-DD');
     //post query to create the actuality
-    const sqlpost=`insert into actualite(title,brief,description,image,creationDate)  values(?,?,?,?,NOW());`
+    const sqlpost=`insert into actualite(title,brief,description,image,video,creationDate)  values(?,?,?,?,?,NOW());`
     //invoking the query with the body object
-    connection.query(sqlpost,[req.body.title,req.body.brief,req.body.description,req.body.image],function(error,results,fields){
+    connection.query(sqlpost,[req.body.title,req.body.brief,req.body.description,req.body.image,req.body.video],function(error,results,fields){
       if(error){
         res.status(500).send(error);
       }
@@ -77,7 +77,7 @@ updateOne:(req,res)=>{
   console.log(req.params);
   const currentDate = moment().format('YYYY-MM-DD');
   // current date is replaced by NOW() "predefined func in sql"
-  const sqlupdate =`UPDATE actualite SET title = '${req.body.title}', description = '${req.body.description}', brief = '${req.body.brief}', image = '${req.body.image}', creationDate = NOW() WHERE idactualite = ${req.params.id};`;
+  const sqlupdate =`UPDATE actualite SET title = '${req.body.title}', description = '${req.body.description}', brief = '${req.body.brief}', image = '${req.body.image}',video='${req.body.video}', creationDate = NOW() WHERE idactualite = ${req.params.id};`;
   connection.query(sqlupdate,function(error,results){
     if(error){res.status(500).send(error);}
     else{

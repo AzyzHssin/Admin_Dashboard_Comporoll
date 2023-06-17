@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `comporoll`.`actualite` (
   `brief` VARCHAR(500) NOT NULL,
   `creationDate` DATETIME NOT NULL,
   `title` VARCHAR(200) NOT NULL,
+  `video` VARCHAR(500) NULL,
   PRIMARY KEY (`idactualite`))
 ENGINE = InnoDB;
 
