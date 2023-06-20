@@ -314,10 +314,10 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+<!--   <footer class="main-footer">
     <strong>Copyright &copy; 2023 Comoroll</strong>
     Tous les droits sont réservés
-  </footer>
+  </footer> -->
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -325,7 +325,7 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
+<!-- ############################################################################################Fonctionalité############################################# -->
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -545,7 +545,7 @@
     videoValue = videoElement.value;
     continueExecution();
   }
-  
+
   function continueExecution() {
     var objectToSend = {
       title: titleValue,
@@ -566,7 +566,7 @@
         setTimeout(() => {
     refreshPage()
     console.log("refreshing")
-  }, 2000);
+  }, 1500);
           },
           error: function(xhr, status, error) {
             console.error(xhr.responseText);
@@ -596,35 +596,36 @@ function UpdateRequest(){
   var descriptionElement = document.getElementById("descriptionUpdate");
   var descriptionValue = descriptionElement.value;
 
-  var videoElement = document.getElementById("videoUpdate")
-  var videoValue = videoElement.value;
 
+  var videoValue=""
   var base64String=""
-  if(videoValue.length==0){
-    var fileInput  = document.getElementById("imageUpdate");
+  var selectedOption=document.getElementById("dropdown2").value;
+
+  if (selectedOption === "option3") {
+    var fileInput = document.getElementById("imageUpdate");
     var file = fileInput.files[0];
+
     var reader = new FileReader();
-
-  
-  reader.onload = function (event) {
-    // Access the base64 result
-    var base64String = event.target.result;
-    
+    reader.onload = function (event) {
+      base64String = event.target.result;
+      console.log("base64", base64String);
+      continueExecution2();
+    };
+    reader.readAsDataURL(file);
+  } else {
+    var videoElement = document.getElementById("videoUpdate");
+    videoValue = videoElement.value;
+    continueExecution2();
   }
-  reader.readAsDataURL(file);
-}
-if(videoValue.length==0){
-  vidoeValue=""
-}
-  var objectToBeUpdated = {
-    title:titleValue ,
-    description:descriptionValue ,
-    image:base64String,
-    brief:briefValue,
-    video:videoValue
- 
-  };
 
+  function continueExecution2() {
+    var objectToBeUpdated = {
+      title: titleValue,
+      description: descriptionValue,
+      image: base64String,
+      brief: briefValue,
+      video: videoValue,
+    };
     //preparing the object for the backend
 
   console.log("object To Be Updated  :",objectToBeUpdated)
@@ -648,7 +649,7 @@ if(videoValue.length==0){
     toastr.error("La requête n'a pas pu être envoyée.");
   }
 });
-
+  }
   
 
 // Read the file as a data URL (base64)
@@ -710,7 +711,8 @@ fetch('http://localhost:5000/api/actualite/fetchAll')
       let html = "";
       cards.forEach(function(card) {
         console.log("this is one card", card)
-        html += `
+        if(card.image.length>0){
+          html += `
           <div class="col-md-12 col-lg-6 col-xl-4 mb-3" id="card-${card.idactualite}">
             <div class="position-relative" id="container">
               <img class="img-fluid object-fit:cover" src="${card.image}" alt="Photo d'actualité">
@@ -728,16 +730,47 @@ fetch('http://localhost:5000/api/actualite/fetchAll')
                 <p class="card-text pb-2 pt-1 text-white">
                   ${card.brief}
                 </p>
-                <a href="#" class="text-white">${card.creationDate}</a>
+                <a href="#" class="text-white">${card.creationDate.slice(0,-8).replace("T"," : ")}</a>
               </div>
             </div>
           </div>`;
+        }
+        else{
+          
+          html += `
+          <div class="col-md-12 col-lg-6 col-xl-4 mb-3" id="card-${card.idactualite}">
+            <div class="position-relative" id="container">
+              <video width="400" height="250" controls>
+                   <source src="${card.video}" type="video/mp4">
+              </video>  
+              <div class="overlay"></div>
+              <div class="card-img-overlay d-flex flex-column justify-content-center">
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" id="dropdownbtn" type="button" data-toggle="dropdown" aria-expanded="false" onClick="passPropsToModal('${card.idactualite}')"></button>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <button class="dropdown-item" type="button" onClick="DeleteCard('${card.idactualite}')">Supprimer l'actualité</button>
+                    <button class="dropdown-item" type="button" data-toggle="modal" data-target="#modal-secondary" >Modifier</button>
+                  </div>
+                </div>
+                
+                <h5 class="card-title text-white">${card.title}</h5>
+                <p class="card-text pb-2 pt-1 text-white">
+                  ${card.brief}
+                </p>
+                <a href="#" class="text-white">${card.creationDate.slice(0,-8).replace("T"," : ")}</a>
+              </div>
+            </div>
+          </div>`;
+          
+        }
+       
       });
 
       document.getElementById('row').innerHTML = html;
     })
     .catch(error => {
       console.error('Error:', error);
+      toastr.error("Error")
     });
 
    // Get the dropdown element
@@ -793,7 +826,7 @@ dropdowntwo.addEventListener("click", function() {
   if (selectedOptiontwo === "option3") {
     resultContainertwo.innerHTML=`  <div class="input-group">
 <div class="custom-file">
-  <input type="file" class="custom-file-input" id="image">
+  <input type="file" class="custom-file-input" id="imageUpdate">
   <label class="custom-file-label" for="exampleInputFile">Choisir une imageUpdate</label>
 </div>
 <div class="input-group-append">
